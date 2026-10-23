@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Rainfall Data Analyzer | Monsoon Lab</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="rain-layer" aria-hidden="true" id="rainLayer"></div>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand"><div class="brand-mark">☔</div><div><strong>Monsoon<span>Lab</span></strong><small>RAINFALL INTELLIGENCE</small></div></div>
+      <div class="side-label">WORKSPACE</div>
+      <a class="nav-item active" href="#overview"><span>◫</span> Overview</a>
+      <a class="nav-item" href="#trends"><span>⌁</span> Rainfall trends</a>
+      <a class="nav-item" href="#records"><span>▤</span> Recent records</a>
+      <div class="sidebar-bottom">
+        <div class="weather-art">☁️<span>☔</span></div>
+        <strong>Follow the rain.</strong>
+        <p>Turn rainfall records into clear, useful insights.</p>
+        <div class="mini-status"><i></i> ANALYZER READY</div>
+      </div>
+    </aside>
+    <main class="main-content">
+      <header class="topbar">
+        <div class="crumb">Workspace <span>/</span> <b>Rainfall Data Analyzer</b></div>
+        <div class="top-right"><span class="live-dot"></span><span>Live analysis workspace</span><button id="rainToggle" class="icon-button" title="Toggle rain animation">〰</button><div class="avatar">RD</div></div>
+      </header>
+      <section class="hero" id="overview">
+        <div class="hero-copy">
+          <div class="eyebrow"><span>✦</span> PHASE 3 · PYTHON PROJECT</div>
+          <h1>Every drop tells<br> a <em>story.</em></h1>
+          <p>Explore rainfall patterns, discover seasonal changes, and turn raw data into a clearer forecast of the past.</p>
+          <div class="hero-actions"><a class="primary-btn" href="#upload">＋ Analyze your data <span>↗</span></a><a href="#trends" class="text-btn">Explore dashboard <span>↓</span></a></div>
+        </div>
+        <div class="hero-visual">
+          <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div>
+          <div class="cloud">☁</div><div class="drop drop-a">💧</div><div class="drop drop-b">💧</div><div class="drop drop-c">💧</div>
+          <div class="rain-card"><div class="rain-card-top"><span>MONSOON METER</span><span class="tiny-pill">● ACTIVE</span></div><div class="rain-value" id="heroTotal">— <small>mm</small></div><div class="rain-caption">Total rainfall in your dataset</div><div class="meter"><span id="meterFill"></span></div><div class="meter-foot"><span>DATA SIGNAL</span><b>ANALYZED <span>✓</span></b></div></div>
+          <div class="floating-chip chip-one">🌧️ <span>Rainy days<br><b id="heroRainy">—</b></span></div>
+          <div class="floating-chip chip-two">📍 <span>Location<br><b id="heroLocation">Multiple stations</b></span></div>
+        </div>
+        <div class="hero-stamp">EST. 2026<br><b>RAIN / DATA</b></div>
+      </section>
+      <section class="upload-strip" id="upload">
+        <div class="upload-intro"><div class="upload-icon">↥</div><div><strong>Bring your rainfall data</strong><p>Upload a CSV file and let the numbers tell their story.</p></div></div>
+        <form id="uploadForm" class="upload-form">
+          <label class="file-drop" for="csvFile"><span>＋</span><span id="fileLabel">Choose CSV file</span><small>.csv · up to 8 MB</small></label>
+          <input id="csvFile" name="file" type="file" accept=".csv,text/csv">
+          <button class="analyze-btn" type="submit" id="analyzeBtn">Analyze data <span>↗</span></button>
+          <button class="sample-btn" type="button" id="sampleBtn">Use sample data</button>
+        </form>
+        <div class="format-hint">Required columns: <code>date</code> and <code>rainfall_mm</code> <span>·</span> Optional: <code>location</code></div>
+      </section>
+      <div class="section-heading"><div><div class="eyebrow muted">YOUR DATA AT A GLANCE</div><h2>The rainfall report<span>.</span></h2></div><div class="updated">↻ <span id="sourceLabel">Sample dataset loaded</span></div></div>
+      <section class="stats-grid">
+        <article class="stat-card stat-blue"><div class="stat-top"><span>Total rainfall</span><span class="stat-icon">↘</span></div><div class="stat-number"><span id="totalValue">—</span><small>mm</small></div><div class="stat-foot"><span class="stat-dot"></span> Combined precipitation</div><div class="card-spark spark-blue">〰〰〰〰</div></article>
+        <article class="stat-card"><div class="stat-top"><span>Daily average</span><span class="stat-icon">∿</span></div><div class="stat-number"><span id="avgValue">—</span><small>mm</small></div><div class="stat-foot"><span class="stat-dot green"></span> Per valid record</div><div class="card-spark spark-green">〰〰〰〰</div></article>
+        <article class="stat-card"><div class="stat-top"><span>Rainiest day</span><span class="stat-icon">☔</span></div><div class="stat-number"><span id="maxValue">—</span><small>mm</small></div><div class="stat-foot"><span id="maxDate">Highest recorded amount</span></div><div class="card-spark spark-purple">〰〰〰〰</div></article>
+        <article class="stat-card"><div class="stat-top"><span>Rainy days</span><span class="stat-icon">☁</span></div><div class="stat-number"><span id="rainyValue">—</span><small>days</small></div><div class="stat-foot"><span id="dryText">Dry days: —</span></div><div class="card-spark spark-orange">〰〰〰〰</div></article>
+      </section>
+      <section class="charts-grid" id="trends">
+        <article class="panel trend-panel"><div class="panel-heading"><div><div class="eyebrow muted">PATTERN RECOGNITION</div><h3>Rainfall through the seasons</h3></div><div class="chart-legend"><i></i> Rainfall (mm)</div></div><div class="chart-wrap"><canvas id="monthlyChart"></canvas></div><div class="chart-bottom"><span>Monthly totals from available records</span><span class="chart-tag">MONTHLY VIEW</span></div></article>
+        <article class="panel yearly-panel"><div class="panel-heading"><div><div class="eyebrow muted">YEAR ON YEAR</div><h3>Annual comparison</h3></div><span class="round-icon">↗</span></div><div class="chart-wrap short"><canvas id="yearlyChart"></canvas></div><div class="insight-box"><div class="insight-icon">✦</div><div><b>Rain insight</b><p id="insightText">Upload data to discover a rainfall insight.</p></div></div></article>
+      </section>
+      <section class="panel records-panel" id="records"><div class="panel-heading"><div><div class="eyebrow muted">LATEST OBSERVATIONS</div><h3>Recent rainfall records</h3></div><span class="record-count" id="recordCount">— records</span></div><div class="table-scroll"><table><thead><tr><th>DATE</th><th>LOCATION</th><th>RAINFALL</th><th>INTENSITY</th></tr></thead><tbody id="recordsBody"><tr><td colspan="4">Loading rainfall records…</td></tr></tbody></table></div><div class="table-foot"><span>Showing the latest 12 valid records</span><button id="downloadBtn" class="download-btn">↓ Export report (.xlsx)</button></div></section>
+      <footer><span>☔ MonsoonLab <span class="footer-muted">· Rainfall Data Analyzer</span></span><span>Built with Python + Flask <b>✦</b></span></footer>
+      <div class="toast" id="toast" role="status"></div>
+    </main>
+  </div>
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body></html>
